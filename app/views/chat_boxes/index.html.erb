@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Chat Boxes</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @chat_boxes.each do |chat_box| %>
+      <tr>
+        <td><%= link_to 'Show', chat_box %></td>
+        <td><%= link_to 'Edit', edit_chat_box_path(chat_box) %></td>
+        <td><%= link_to 'Destroy', chat_box, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Chat Box', new_chat_box_path %>
