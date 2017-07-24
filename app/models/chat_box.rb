@@ -1,2 +1,0 @@
-class ChatBox < ApplicationRecord
-end
