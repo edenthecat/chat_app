@@ -402,8 +402,50 @@ Rails will look for a `refresh_messages.js.erb` view to render because of that `
 
 The `refresh_messages` view will check to make sure that we don't have an empty @messages, and then if there are @messages, will render a message partial for them and append them. I've also taken the time to check if the message already exists and remove it, just in case.
 
+### Styling
+
+I've done some basic styling, and placed it as a component in our stylesheets. It will simply render the received messages as blue, and the sent messages as grey. It will also place them on left/right based on if they were sent/received.
+
+```
+// app/assets/stylesheets/components/_messages.scss
+#messages-list {
+  display: flex;
+  height: 60vh;
+  width: 60%;
+  overflow: scroll;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.message {
+  padding: 10px;
+  margin: 5px;
+  &.received {
+    align-self: flex-start;
+    background-color: $blue;
+    border-radius: 20px 20px 20px 0px;
+    color: white;
+  }
+  &.sent {
+    align-self: flex-end;
+    background-color: #CECECE;
+    border-radius: 20px 20px 0px 20px;
+  }
+}
+
+form#newMessage {
+    display: flex;
+    justify-content: center;
+}
+```
+
+Make sure to add @import "messages" to your component index!
 
 
+
+----
+
+And that's it! If you have any questions or confusion, please submit an issue or contact me (or submit a pull request ;)). 
 
 
 
