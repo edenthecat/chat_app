@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :conversations do
-    resources :messages
+    resources :messages, only: [:index, :new, :create, :destroy]
   end
   devise_for :users
   root to: 'pages#home'
