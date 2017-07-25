@@ -12,7 +12,7 @@
   <tbody>
     <% @conversations.each do |conversation| %>
       <tr>
-        <td><%= link_to 'Show', conversation %></td>
+        <td><%= conversation.user2.email %><%= link_to 'Show', conversation %></td>
         <td><%= link_to 'Edit', edit_conversation_path(conversation) %></td>
         <td><%= link_to 'Destroy', conversation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

@@ -15,16 +15,16 @@ class ConversationsController < ApplicationController
   # GET /conversations/new
   def new
     @conversation = Conversation.new
-  end
-
-  # GET /conversations/1/edit
-  def edit
+    @conversation.user1 = current_user
   end
 
   # POST /conversations
   # POST /conversations.json
   def create
-    @conversation = Conversation.new(conversation_params)
+    @conversation = Conversation.new()
+
+    @conversation.user1 = current_user
+    @conversation.user2 = User.find(conversation_params[:user2].to_i)
 
     respond_to do |format|
       if @conversation.save
@@ -61,6 +61,14 @@ class ConversationsController < ApplicationController
     end
   end
 
+  def refresh_messages
+    @messages = @conversation.messages.where("created_at > ?", 3.second.ago)
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_conversation
@@ -69,6 +77,6 @@ class ConversationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def conversation_params
-      params.fetch(:conversation, {})
+      params.require(:conversation).permit(:user2)
     end
 end

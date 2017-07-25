@@ -1,8 +1,7 @@
 <%= simple_form_for(@conversation) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
-  </div>
+  <%= f.input :user2, collection: User.all %>
 
   <div class="form-actions">
     <%= f.button :submit %>
