@@ -19,9 +19,9 @@
       scrollToBottom();
       setInterval(refreshMessages, 1000);
     });
-    function updateScroll(){
-      var element = document.getElementById("#messages-list");
-      element.scrollTop = element.scrollHeight;
+    function scrollToBottom(){
+      var d = $('#messages-list');
+      d.scrollTop(d.prop("scrollHeight"));
     }
     function refreshMessages() {
       if($("#messages-list .message").length > 0) {
@@ -35,6 +35,7 @@
           url: "<%= j refresh_messages_path(@conversation) %>",
         });
       }
+      scrollToBottom();
     }
   </script>
 <% end %>

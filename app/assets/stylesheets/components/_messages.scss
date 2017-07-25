@@ -1,0 +1,29 @@
+#messages-list {
+  display: flex;
+  height: 60vh;
+  width: 60%;
+  overflow: scroll;
+  flex-direction: column;
+  scroll-behavior: smooth;
+}
+
+.message {
+  padding: 10px;
+  margin: 5px;
+  &.received {
+    align-self: flex-start;
+    background-color: $blue;
+    border-radius: 20px 20px 20px 0px;
+    color: white;
+  }
+  &.sent {
+    align-self: flex-end;
+    background-color: #CECECE;
+    border-radius: 20px 20px 0px 20px;
+  }
+}
+
+form#newMessage {
+    display: flex;
+    justify-content: center;
+}
