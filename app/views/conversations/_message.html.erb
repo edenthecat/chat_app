@@ -1,0 +1,7 @@
+<% if current_user.id == message.user_id then status = "sent" else status = "received" end %>
+
+  <div class="message <%= status %>" id="message_<%= message.id %>">
+
+  <p><%=  message.content %></p>
+
+</div>
