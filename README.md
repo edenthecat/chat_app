@@ -160,12 +160,11 @@ Since this demo app has a very minimal UI, we're going to simply allow a user to
 We initialize the current conversation, and we'll set the current user as user1 (the recipient will be user2).
 
 ##### View
-```
-# /app/views/conversations/new.html.erb```
 
 The new view is fairly simple, it renders a _form partial for the conversation and has a back button that leads to the conversation index.
 
 ```
+# /app/views/conversations/new.html.erb
 <h1>New Conversation</h1>
 
 <%= render 'form', conversation: @conversation %>
@@ -176,6 +175,7 @@ The new view is fairly simple, it renders a _form partial for the conversation a
 The _form.html.erb partial should look like this:
 
 ```
+# /app/views/conversations/_form.html.erb
 <%= simple_form_for(@conversation) do |f| %>
   <%= f.error_notification %>
 
@@ -188,6 +188,82 @@ The _form.html.erb partial should look like this:
 ```
 
 We'll let the user select a user to chat with simply by selecting their email. Right now, a user can chat with themselves. Later, we could set restrictions so that they can not do that (if we want to).
+
+#### Create
+```
+# app/controllers/conversations_controller.rb
+  def create
+    @conversation = Conversation.new()
+
+    @conversation.user1 = current_user
+    @conversation.user2 = User.find(conversation_params[:user2].to_i)
+
+    respond_to do |format|
+      if @conversation.save
+        format.html { redirect_to @conversation, notice: 'Conversation was successfully created.' }
+      else
+        format.html { render :new }
+      end
+    end
+  end
+  ```
+
+Our create action is fairly standard, but we need to make sure we set user1 and user2
+
+#### Index
+
+##### Controller Action
+
+```
+# app/controllers/conversations_controller.rb
+  def index
+    @conversations = Conversation.where("user_1_id = ? or user_2_id = ?", current_user.id, current_user.id)
+  end
+```
+
+Here we want just the conversations that our current_user is a part of. We could use authorization later to do this a bit more simply.
+
+##### View
+
+```
+# app/views/conversations/index.html.erb
+
+<p id="notice"><%= notice %></p>
+
+<h1>My Conversations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @conversations.each do |conversation| %>
+      <tr>
+        <td><%= link_to conversation do %>
+            Conversation with <%= recipient(conversation).email %>
+            <% end %>
+        </td>
+        <td><%= link_to conversation, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+            <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Conversation', new_conversation_path %>
+```
+
+Our view is fairly simple. It's just going to list out the email addresses (as links to the conversations), with the ability to destroy a conversation by clicking on a nice garbage can icon.
+
+#### Show
+
 
 
 
