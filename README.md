@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-I used the rails devise template from Le Wagon for this tutorial, but if you have existing models and an app going already, you should be able to nest the Conversations model in whatever model it depends on.
+I used the ![rails devise template from Le Wagon](https://github.com/lewagon/rails-templates#devise) for this tutorial, but if you have existing models and an app going already, you should be able to nest the Conversations model in whatever model it depends on.
 
 ## Our database
 
