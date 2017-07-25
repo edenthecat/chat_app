@@ -15,14 +15,11 @@ class MessagesController < ApplicationController
     @message.user_id = current_user.id
     @message.conversation_id = @conversation.id
 
-
-    respond_to do |format|
-      if @message.save
-        format.html { redirect_to @conversation, notice: 'Message was successfully created.' }
-        format.json { render :show, status: :created, location: @conversation }
-      else
-        format.html { render :new }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
+    if @message.save!
+      puts "Message ID:"
+      puts @message.id
+      respond_to do |format|
+        format.js
       end
     end
   end
@@ -45,6 +42,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:conversation, :content)
+      params.require(:message).permit(:conversation, :content, :conversation_id, :user_id)
     end
 end

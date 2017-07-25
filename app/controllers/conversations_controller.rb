@@ -1,5 +1,6 @@
 class ConversationsController < ApplicationController
   before_action :set_conversation, only: [:show, :edit, :update, :destroy, :refresh_messages]
+  helper_method :recipient
 
   # GET /conversations
   # GET /conversations.json
@@ -10,6 +11,7 @@ class ConversationsController < ApplicationController
   # GET /conversations/1
   # GET /conversations/1.json
   def show
+    @message = Message.new
   end
 
   # GET /conversations/new
@@ -29,10 +31,8 @@ class ConversationsController < ApplicationController
     respond_to do |format|
       if @conversation.save
         format.html { redirect_to @conversation, notice: 'Conversation was successfully created.' }
-        format.json { render :show, status: :created, location: @conversation }
       else
         format.html { render :new }
-        format.json { render json: @conversation.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -43,10 +43,8 @@ class ConversationsController < ApplicationController
     respond_to do |format|
       if @conversation.update(conversation_params)
         format.html { redirect_to @conversation, notice: 'Conversation was successfully updated.' }
-        format.json { render :show, status: :ok, location: @conversation }
       else
         format.html { render :edit }
-        format.json { render json: @conversation.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -57,16 +55,21 @@ class ConversationsController < ApplicationController
     @conversation.destroy
     respond_to do |format|
       format.html { redirect_to conversations_url, notice: 'Conversation was successfully destroyed.' }
-      format.json { head :no_content }
     end
   end
 
   def refresh_messages
-    @messages = @conversation.messages.where("created_at > ?", 3.second.ago)
-
-    respond_to do |format|
-      format.js
+    if !params[:last_message_id].nil? &&
+      last_message = @conversation.messages.find(params[:last_message_id])
+      @messages = @conversation.messages.where("created_at > ?", last_message.created_at)
+      respond_to do |format|
+        format.js
+      end
     end
+  end
+
+  def recipient(conversation)
+    recipient = current_user == conversation.user1 ? conversation.user2 : conversation.user1
   end
 
   private
