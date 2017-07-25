@@ -1,4 +1,23 @@
-<p id="notice"><%= notice %></p>
+<div class="container" id="messages-list" >
+  <% @conversation.messages.each do |message| %>
+    <%= render "message", message: message %>
+  <% end %>
+</div>
+
+<%= link_to 'Send a Message', new_conversation_message_path(@conversation) %>
 
 <%= link_to 'Edit', edit_conversation_path(@conversation) %> |
 <%= link_to 'Back', conversations_path %>
+
+<%= content_for(:after_js) do %>
+  <script>
+    $(document).ready(function() {
+      setInterval(refreshMessages, 3000);
+    });
+    function refreshMessages() {
+      $.ajax({
+        url: "messages/refresh_messages"
+      });
+    }
+  </script>
+<% end %>
