@@ -12,3 +12,11 @@ A snapshot of our database will look something like this:
 
 ![alt text](http://i.imgur.com/aveYUkC.png "Database Schema")
 
+We'll need to run some migrations to create the Conversation and Message models:
+
+```
+rails g migration CreateConversations
+rails g migration AddUsersToConversation user_1_id:integer user_2_id:integer
+rails g migration CreateMessages conversation:references user:references text:references
+```
+
