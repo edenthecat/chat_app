@@ -1,0 +1,8 @@
+<% if !@messages.nil? %>
+  <% @messages.each do |message| %>
+    var msg_selector = $("#message_<%= message.id %>");
+    $(msg_selector).remove();
+    var msg = "<%= j render 'messages/show', message: message %>";
+    $('#messages-list').append(msg);
+  <% end %>
+<% end %>

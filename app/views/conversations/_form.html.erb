@@ -1,7 +1,7 @@
 <%= simple_form_for(@conversation) do |f| %>
   <%= f.error_notification %>
 
-  <%= f.input :user2, collection: User.all %>
+  <%= f.input :user2, collection: User.all.map{ |u| [u.email, u.id, { class: u.id}] } %>
 
   <div class="form-actions">
     <%= f.button :submit %>

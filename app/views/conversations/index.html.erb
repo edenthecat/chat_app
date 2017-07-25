@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Conversations</h1>
+<h1>My Conversations</h1>
 
 <table>
   <thead>
@@ -12,9 +12,14 @@
   <tbody>
     <% @conversations.each do |conversation| %>
       <tr>
-        <td><%= conversation.user2.email %><%= link_to 'Show', conversation %></td>
-        <td><%= link_to 'Edit', edit_conversation_path(conversation) %></td>
-        <td><%= link_to 'Destroy', conversation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to conversation do %>
+            Conversation with <%= recipient(conversation).email %>
+            <% end %>
+        </td>
+        <td><%= link_to conversation, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+            <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
