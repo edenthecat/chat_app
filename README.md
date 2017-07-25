@@ -26,9 +26,9 @@ rails g migration CreateMessages conversation:references user:references text:re
 We'll also have to add some associations
 
 ```
-app/models/user.rb
+# app/models/user.rb
 class User < ApplicationRecord
-  [...]
+  # [...]
   has_many :conversations
   has_many :sent_messages, :class_name => "Message", :foreign_key => "user_1_id"
   has_many :received_messages, :class_name => "Message", :foreign_key => "user_2_id", through: :conversations
@@ -36,7 +36,7 @@ end
 ```
 
 ```
-app/models/conversation.rb
+# app/models/conversation.rb
 class Conversation < ApplicationRecord
   belongs_to :user1, :class_name => "User", :foreign_key => "user_1_id"
   belongs_to :user2, :class_name => "User", :foreign_key => "user_2_id"
@@ -56,7 +56,7 @@ You can add validations as you please.
 
 ```
 Rails.application.routes.draw do
-  [...]
+  # [...]
   resources :conversations do
     resources :messages, only: [:index, :new, :create, :destroy]
   end
@@ -135,10 +135,62 @@ The controller will exclusively respond with javascript (it will be looking for 
 We use a js.erb view to do one simple thing:
 
 ```
+# /app/views/messages/create.js.erb
 $("#newMessage input").val('');
 ```
 
 All it needs to do is clear the input where we enter a new message, since the conversation will handle refreshing the page on a timed interval.
+
+### Conversation
+
+#### New
+
+Since this demo app has a very minimal UI, we're going to simply allow a user to select who they want to chat with from the "new" form.
+
+##### Controller Action
+
+```
+# /app/controllers/conversations_controller.rb
+  def new
+    @conversation = Conversation.new
+    @conversation.user1 = current_user
+  end
+```
+
+We initialize the current conversation, and we'll set the current user as user1 (the recipient will be user2).
+
+##### View
+```
+# /app/views/conversations/new.html.erb```
+
+The new view is fairly simple, it renders a _form partial for the conversation and has a back button that leads to the conversation index.
+
+```
+<h1>New Conversation</h1>
+
+<%= render 'form', conversation: @conversation %>
+
+<%= link_to 'Back', conversations_path %>
+```
+
+The _form.html.erb partial should look like this:
+
+```
+<%= simple_form_for(@conversation) do |f| %>
+  <%= f.error_notification %>
+
+  <%= f.input :user2, collection: User.all.map{ |u| [u.email, u.id, { class: u.id}] } %>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+```
+
+We'll let the user select a user to chat with simply by selecting their email. Right now, a user can chat with themselves. Later, we could set restrictions so that they can not do that (if we want to).
+
+
+
 
 
 
