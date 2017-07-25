@@ -1,51 +1,27 @@
 class MessagesController < ApplicationController
   before_action :set_message, only: [:show, :edit, :update, :destroy]
 
-  # GET /messages
-  # GET /messages.json
-  def index
-    @messages = Message.all
-  end
-
-  # GET /messages/1
-  # GET /messages/1.json
-  def show
-  end
-
   # GET /messages/new
   def new
+    @conversation = Conversation.find(params[:conversation_id])
     @message = Message.new
-  end
-
-  # GET /messages/1/edit
-  def edit
   end
 
   # POST /messages
   # POST /messages.json
   def create
+    @conversation = Conversation.find(params[:conversation_id])
     @message = Message.new(message_params)
+    @message.user_id = current_user.id
+    @message.conversation_id = @conversation.id
+
 
     respond_to do |format|
       if @message.save
-        format.html { redirect_to @message, notice: 'Message was successfully created.' }
-        format.json { render :show, status: :created, location: @message }
+        format.html { redirect_to @conversation, notice: 'Message was successfully created.' }
+        format.json { render :show, status: :created, location: @conversation }
       else
         format.html { render :new }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /messages/1
-  # PATCH/PUT /messages/1.json
-  def update
-    respond_to do |format|
-      if @message.update(message_params)
-        format.html { redirect_to @message, notice: 'Message was successfully updated.' }
-        format.json { render :show, status: :ok, location: @message }
-      else
-        format.html { render :edit }
         format.json { render json: @message.errors, status: :unprocessable_entity }
       end
     end
@@ -69,6 +45,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:references, :references, :content)
+      params.require(:message).permit(:conversation, :content)
     end
 end
